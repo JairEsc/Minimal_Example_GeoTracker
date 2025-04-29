@@ -150,24 +150,24 @@ def save_location_history(n_clicks):
         coordinates = [(entry["longitude"], entry["latitude"]) for entry in location_history]
 
         # Connect to the PostgreSQL database
-        conn = psycopg2.connect(
-            dbname="postgres",
-            user="postgres",
-            password="--------------",
-            host="cityflowlimpia.cmpmegoiaext.us-east-1.rds.amazonaws.com",
-            port="5432"
-        )
-        cursor = conn.cursor()
+        # conn = psycopg2.connect(
+        #     dbname="postgres",
+        #     user="postgres",
+        #     password="--------------",
+        #     host="cityflowlimpia.cmpmegoiaext.us-east-1.rds.amazonaws.com",
+        #     port="5432"
+        # )
+        # cursor = conn.cursor()
 
-        # Insert the location history as a LineString
-        cursor.execute("""
-            INSERT INTO geoTracker (start_timestamp, end_timestamp, geometry)
-            VALUES (%s, %s, ST_MakeLine(ARRAY[%s]::geometry[]))
-        """, (start_timestamp, end_timestamp, ','.join([f"ST_MakePoint({lon}, {lat})" for lon, lat in coordinates])))
+        # # Insert the location history as a LineString
+        # cursor.execute("""
+        #     INSERT INTO geoTracker (start_timestamp, end_timestamp, geometry)
+        #     VALUES (%s, %s, ST_MakeLine(ARRAY[%s]::geometry[]))
+        # """, (start_timestamp, end_timestamp, ','.join([f"ST_MakePoint({lon}, {lat})" for lon, lat in coordinates])))
 
-        conn.commit()
-        cursor.close()
-        conn.close()
+        # conn.commit()
+        # cursor.close()
+        # conn.close()
         print(location_history)
         return f"Location history saved from {start_timestamp} to {end_timestamp}.",True
     return "No location history to save.", no_update
