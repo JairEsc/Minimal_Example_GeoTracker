@@ -1,0 +1,6 @@
+dash
+dash-bootstrap-components
+mysql-connector-python
+dash-leaflet
+pandas
+geopandas
