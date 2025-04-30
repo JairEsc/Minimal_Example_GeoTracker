@@ -1,0 +1,27 @@
+import geopandas as gpd
+import psycopg2
+import folium
+
+# Step 1: Connect to the database
+conn = psycopg2.connect(
+    dbname='postgres',
+    user='postgres',
+    password='-----',
+    host='database-geotracker.cmpmegoiaext.us-east-1.rds.amazonaws.com',
+    port='5432'
+)
+
+sql = "SELECT * FROM geoTracker"
+gdf = gpd.read_postgis(sql, conn, geom_col='geometry')
+
+# Step 3: Get map center from data (first point)
+center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
+
+# Step 4: Create a folium map
+m = folium.Map(location=center, zoom_start=14)
+
+# Step 5: Add lines to the map
+for _, row in gdf.iterrows():
+    if row.geometry.geom_type == 'LineString':
+        folium.PolyLine(locations=[(pt[1], pt[0]) for pt in row.geometry.coords],
+                        color='blue', weight=5).add_to(m)
